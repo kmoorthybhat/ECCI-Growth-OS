@@ -1,0 +1,3 @@
+# Exclude server-side code and internal edge assets from visual asset serving
+worker.js
+*.map
