@@ -1,0 +1,172 @@
+{
+  "schemaVersion": "1.0",
+  "collections": {
+    "users": {
+      "description": "User profiles and roles",
+      "fields": {
+        "email": { "type": "string", "required": true },
+        "role": { "type": "string", "required": true, "enum": ["innovator", "client"] },
+        "tier": { "type": "string", "required": true, "enum": ["Starter", "Growth", "Scale", "Enterprise"] },
+        "clientId": { "type": "string", "required": false },
+        "createdAt": { "type": "string", "required": true }
+      }
+    },
+    "clients": {
+      "description": "Client accounts and business details",
+      "fields": {
+        "businessName": { "type": "string", "required": true },
+        "websiteUrl": { "type": "string", "required": true },
+        "industry": { "type": "string", "required": true },
+        "tier": { "type": "string", "required": true },
+        "status": { "type": "string", "required": true, "enum": ["onboarding", "scanning", "intelligence_ready", "campaigns_live"] },
+        "ownerId": { "type": "string", "required": true },
+        "healthScore": { "type": "number", "required": false },
+        "killSwitch": { "type": "boolean", "required": false },
+        "maxMonthlyBudget": { "type": "number", "required": false },
+        "createdAt": { "type": "string", "required": true }
+      }
+    },
+    "campaigns": {
+      "description": "Ad campaigns across Google, Meta, LinkedIn, etc.",
+      "fields": {
+        "clientId": { "type": "string", "required": true },
+        "title": { "type": "string", "required": true },
+        "platform": { "type": "string", "required": true },
+        "status": { "type": "string", "required": true, "enum": ["pending_approval", "approved", "draft", "live", "paused", "rejected"] },
+        "spend": { "type": "number", "required": true },
+        "dailyBudget": { "type": "number", "required": true },
+        "impressions": { "type": "number", "required": true },
+        "ctr": { "type": "number", "required": true },
+        "conversions": { "type": "number", "required": true },
+        "cpl": { "type": "number", "required": true },
+        "creativeIds": { "type": "array", "required": false },
+        "targetAudience": { "type": "string", "required": false },
+        "createdAt": { "type": "string", "required": true }
+      }
+    },
+    "creatives": {
+      "description": "AI generated text, visual and video creatives",
+      "fields": {
+        "clientId": { "type": "string", "required": true },
+        "type": { "type": "string", "required": true, "enum": ["text", "visual", "video"] },
+        "title": { "type": "string", "required": true },
+        "content": { "type": "map", "required": true },
+        "status": { "type": "string", "required": true },
+        "personaId": { "type": "string", "required": false },
+        "adAngle": { "type": "string", "required": false },
+        "createdAt": { "type": "string", "required": true }
+      }
+    },
+    "leads": {
+      "description": "Incoming leads with AI lead scoring",
+      "fields": {
+        "clientId": { "type": "string", "required": true },
+        "name": { "type": "string", "required": true },
+        "email": { "type": "string", "required": true },
+        "phone": { "type": "string", "required": false },
+        "score": { "type": "number", "required": true },
+        "personaMatch": { "type": "string", "required": false },
+        "source": { "type": "string", "required": true },
+        "status": { "type": "string", "required": true, "enum": ["new", "qualified", "meeting", "won", "lost"] },
+        "value": { "type": "number", "required": false },
+        "notes": { "type": "string", "required": false },
+        "createdAt": { "type": "string", "required": true }
+      }
+    },
+    "prompts": {
+      "description": "Innovator System Prompt Library",
+      "fields": {
+        "name": { "type": "string", "required": true },
+        "description": { "type": "string", "required": true },
+        "category": { "type": "string", "required": true },
+        "model": { "type": "string", "required": true },
+        "promptText": { "type": "string", "required": true },
+        "version": { "type": "string", "required": true },
+        "updatedAt": { "type": "string", "required": true }
+      }
+    },
+    "telemetry_events": {
+      "description": "Event-Augmented Telemetry Store (Module 20)",
+      "fields": {
+        "eventId": { "type": "string", "required": true },
+        "clientId": { "type": "string", "required": true },
+        "eventType": { "type": "string", "required": true, "enum": ["ANOMALY_CPA_SPIKE", "CTR_DROP", "LEAD_CONVERSION", "BUDGET_EXHAUSTION"] },
+        "sourcePlatform": { "type": "string", "required": true, "enum": ["google", "meta", "linkedin"] },
+        "payload": { "type": "map", "required": true },
+        "timestamp": { "type": "string", "required": true },
+        "processed": { "type": "boolean", "required": true }
+      }
+    },
+    "audit_trail": {
+      "description": "Autonomous Action Audit Trail (Module 21)",
+      "fields": {
+        "logId": { "type": "string", "required": true },
+        "clientId": { "type": "string", "required": true },
+        "campaignId": { "type": "string", "required": false },
+        "actionTaken": { "type": "string", "required": true },
+        "triggerReason": { "type": "string", "required": true },
+        "executedBy": { "type": "string", "required": true, "enum": ["AI_AGENT", "INNOVATOR_OVERRIDE"] },
+        "timestamp": { "type": "string", "required": true },
+        "proofOfWork": { "type": "map", "required": true }
+      }
+    },
+    "agent_workflows": {
+      "description": "Custom Apps Script Automation Workflows (Module 23)",
+      "fields": {
+        "workflowId": { "type": "string", "required": true },
+        "clientId": { "type": "string", "required": true },
+        "promptIntent": { "type": "string", "required": true },
+        "generatedScript": { "type": "string", "required": true },
+        "status": { "type": "string", "required": true, "enum": ["DRAFT", "AST_VERIFIED", "ACTIVE", "PAUSED"] },
+        "createdAt": { "type": "string", "required": true },
+        "lastExecutedAt": { "type": "string", "required": false }
+      }
+    },
+    "transactions": {
+      "description": "Billing & Payment Transactions Ledger",
+      "fields": {
+        "clientId": { "type": "string", "required": true },
+        "userId": { "type": "string", "required": true },
+        "provider": { "type": "string", "required": true, "enum": ["paypal", "paytm"] },
+        "type": { "type": "string", "required": true, "enum": ["onboarding", "monthly_retainer"] },
+        "amount": { "type": "number", "required": true },
+        "currency": { "type": "string", "required": true, "enum": ["USD", "INR"] },
+        "status": { "type": "string", "required": true, "enum": ["COMPLETED", "PENDING", "FAILED"] },
+        "paymentId": { "type": "string", "required": true },
+        "orderId": { "type": "string", "required": false },
+        "createdAt": { "type": "string", "required": true }
+      }
+    },
+    "billing_configs": {
+      "description": "Innovator Tier Pricing Rates & Gateway Credentials",
+      "fields": {
+        "tiers": { "type": "map", "required": true },
+        "paypal": { "type": "map", "required": false },
+        "paytm": { "type": "map", "required": false }
+      }
+    },
+    "agencies": {
+      "description": "White-Label Agency Partner Profiles, Domains & Branding (Module 14)",
+      "fields": {
+        "ownerId": { "type": "string", "required": true },
+        "agencyName": { "type": "string", "required": true },
+        "customDomain": { "type": "string", "required": true },
+        "domainVerificationStatus": { "type": "string", "required": true, "enum": ["pending", "verified", "failed"] },
+        "sslStatus": { "type": "string", "required": true, "enum": ["active", "pending", "error"] },
+        "branding": { "type": "map", "required": true },
+        "assignedClients": { "type": "array", "required": true },
+        "status": { "type": "string", "required": true, "enum": ["active", "disabled"] },
+        "createdAt": { "type": "string", "required": true }
+      }
+    },
+    "domains_registry": {
+      "description": "Custom Domain Mapping Registry for Sub-Tenants (Module 14)",
+      "fields": {
+        "agencyId": { "type": "string", "required": true },
+        "status": { "type": "string", "required": true, "enum": ["active", "disabled"] },
+        "createdAt": { "type": "string", "required": true }
+      }
+    }
+  },
+  "securityIntent": "Allow users to read and write their own client documents and campaigns; Innovators have access to all collections."
+}

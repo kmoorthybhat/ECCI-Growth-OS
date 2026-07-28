@@ -1,0 +1,6 @@
+{
+  "name": "ECCI Growth OS",
+  "description": "AI-powered Full Stack Marketing OS that scans your website, builds personas, creates ad creatives & auto-launches campaigns across Google, Meta, LinkedIn with full budget control.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

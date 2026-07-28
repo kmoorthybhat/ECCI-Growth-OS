@@ -1,0 +1,13 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check auth
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    match /{document=**} {
+      allow read, write: if true; // Prototyping rules for Growth OS MVP
+    }
+  }
+}
