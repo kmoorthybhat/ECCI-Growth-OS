@@ -1,32 +1,27 @@
 # ==============================================================================
 # ECCI Growth OS — Enterprise Cloudflare Wrangler Configuration (TOML)
 # ==============================================================================
-# Purpose: Configuration manifest for Cloudflare Workers & Pages Functions.
-# Configures core bindings, environment variables, multi-stage environments,
-# AI capabilities, persistent storage, queuing, and edge performance optimization.
+# Purpose: Cloudflare Pages & Pages Functions Configuration Manifest.
+# Serves Vite static bundle from `dist/` and serverless API endpoints from `functions/`.
 # ==============================================================================
 
 name = "ecci-growth-os"
-main = "src/index.ts"
+pages_build_output_dir = "dist"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
-pages_build_output_dir = "dist"
 
 # ------------------------------------------------------------------------------
 # Performance & Edge Routing Optimization
 # ------------------------------------------------------------------------------
-# Smart Placement automatically routes worker execution closer to backends / data sources.
 [placement]
 mode = "smart"
 
-# Automated Observability & Telemetry
 [observability]
 enabled = true
 
 # ------------------------------------------------------------------------------
 # Production Environment Variables (Non-secret)
 # ------------------------------------------------------------------------------
-# Consumed by API Gateway, AI Engine, Workflow Manager, and Frontend UI.
 [vars]
 APP_NAME = "ECCI Growth OS"
 COMPANY_NAME = "ECCI Growth"
@@ -49,42 +44,40 @@ NEXT_PUBLIC_APP_ENV = "production"
 NEXT_PUBLIC_FIREBASE_PROJECT_ID = "ai-studio-eccigrowthos"
 
 # ------------------------------------------------------------------------------
-# Expected Production Secrets (DO NOT HARDCODE VALUES)
+# Expected Production Secrets (Provisioned via CLI: wrangler secret put <NAME>)
 # ------------------------------------------------------------------------------
-# Set these secrets securely using Wrangler CLI:
-#   npx wrangler secret put GEMINI_API_KEY
-#   npx wrangler secret put OPENAI_API_KEY
-#   npx wrangler secret put ANTHROPIC_API_KEY
-#   npx wrangler secret put META_APP_SECRET
-#   npx wrangler secret put META_ACCESS_TOKEN
-#   npx wrangler secret put GOOGLE_CLIENT_SECRET
-#   npx wrangler secret put GOOGLE_API_KEY
-#   npx wrangler secret put GOOGLE_MAPS_KEY
-#   npx wrangler secret put RESEND_API_KEY
-#   npx wrangler secret put SENDGRID_API_KEY
-#   npx wrangler secret put MAILGUN_API_KEY
-#   npx wrangler secret put STRIPE_SECRET_KEY
-#   npx wrangler secret put PAYPAL_CLIENT_SECRET
-#   npx wrangler secret put CLOUDFLARE_API_TOKEN
-#   npx wrangler secret put JWT_SECRET
-#   npx wrangler secret put ENCRYPTION_KEY
-#   npx wrangler secret put WEBHOOK_SECRET
-#   npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
-#   npx wrangler secret put NOTION_API_KEY
-#   npx wrangler secret put SLACK_BOT_TOKEN
-# ------------------------------------------------------------------------------
+# GEMINI_API_KEY
+# OPENAI_API_KEY
+# ANTHROPIC_API_KEY
+# META_APP_SECRET
+# META_ACCESS_TOKEN
+# GOOGLE_CLIENT_SECRET
+# GOOGLE_API_KEY
+# GOOGLE_MAPS_KEY
+# RESEND_API_KEY
+# SENDGRID_API_KEY
+# MAILGUN_API_KEY
+# STRIPE_SECRET_KEY
+# PAYPAL_CLIENT_SECRET
+# CLOUDFLARE_API_TOKEN
+# JWT_SECRET
+# ENCRYPTION_KEY
+# WEBHOOK_SECRET
+# SUPABASE_SERVICE_ROLE_KEY
+# NOTION_API_KEY
+# SLACK_BOT_TOKEN
 
 # ==============================================================================
-# Cloudflare Infrastructure Resource Bindings
+# Infrastructure Bindings
 # ==============================================================================
 
-# 1. D1 Database — Production Relational Database (CRM, Billing, Users)
+# 1. D1 Database
 [[d1_databases]]
 binding = "DB"
 database_name = "ecci-db-prod"
 database_id = "<YOUR_PRODUCTION_D1_DATABASE_ID>"
 
-# 2. KV Namespaces — Edge Caching, Session Management & Config Store
+# 2. KV Namespaces
 [[kv_namespaces]]
 binding = "CACHE"
 id = "<YOUR_PRODUCTION_CACHE_KV_ID>"
@@ -97,16 +90,16 @@ id = "<YOUR_PRODUCTION_SESSIONS_KV_ID>"
 binding = "CONFIG"
 id = "<YOUR_PRODUCTION_CONFIG_KV_ID>"
 
-# 3. R2 Object Storage Buckets — Assets & Automated Report Storage
+# 3. R2 Buckets
 [[r2_buckets]]
-binding = "ASSET_BUCKET"
+binding = "ASSETS"
 bucket_name = "ecci-assets-prod"
 
 [[r2_buckets]]
 binding = "REPORTS"
 bucket_name = "ecci-reports-prod"
 
-# 4. Queues — Asynchronous Background Jobs & Automation Workflows
+# 4. Queues
 [[queues.producers]]
 queue = "ecci-background-queue-prod"
 binding = "BACKGROUND_QUEUE"
@@ -116,7 +109,7 @@ queue = "ecci-background-queue-prod"
 max_batch_size = 10
 max_batch_timeout = 30
 
-# 5. Durable Objects — Real-Time AI Session State & Workflow Engine
+# 5. Durable Objects
 [durable_objects]
 bindings = [
   { name = "AI_AGENT", class_name = "AIAgentSessionManager" },
@@ -127,42 +120,35 @@ bindings = [
 tag = "v1"
 new_classes = ["AIAgentSessionManager", "WorkflowEngine"]
 
-# 6. Vectorize Index — Semantic Search & AI Memory Index
+# 6. Vectorize
 [[vectorize]]
 binding = "VECTOR_INDEX"
 index_name = "ecci-vector-index-prod"
 
-# 7. Workers AI — Native On-Edge Machine Learning & LLM Inferences
+# 7. Workers AI
 [ai]
 binding = "AI"
 
-# 8. Browser Rendering — Automated Screenshot, PDF & Headless Scraping
+# 8. Browser Rendering
 [browser]
 binding = "BROWSER"
 
-# 9. Analytics Engine — High-Velocity Real-Time Event & Usage Telemetry
+# 9. Analytics Engine
 [[analytics_engine_datasets]]
 binding = "ANALYTICS"
 dataset = "ecci_analytics_prod"
 
-# 10. Hyperdrive — High-Performance Distributed SQL Connection Pooling
+# 10. Hyperdrive
 [[hyperdrive]]
 binding = "HYPERDRIVE"
 id = "<YOUR_PRODUCTION_HYPERDRIVE_ID>"
 
-
 # ==============================================================================
-# Multi-Stage Environment Configurations
+# Multi-Stage Environments
 # ==============================================================================
 
-# ------------------------------------------------------------------------------
-# DEVELOPMENT ENVIRONMENT
-# ------------------------------------------------------------------------------
 [env.dev]
 name = "ecci-growth-os-dev"
-routes = [
-  { pattern = "dev.eccigrowthos.com/*", zone_name = "eccigrowthos.com" }
-]
 
 [env.dev.vars]
 APP_NAME = "ECCI Growth OS [DEV]"
@@ -202,7 +188,7 @@ binding = "CONFIG"
 id = "<YOUR_DEV_CONFIG_KV_ID>"
 
 [[env.dev.r2_buckets]]
-binding = "ASSET_BUCKET"
+binding = "ASSETS"
 bucket_name = "ecci-assets-dev"
 
 [[env.dev.r2_buckets]]
@@ -222,14 +208,8 @@ binding = "ANALYTICS"
 dataset = "ecci_analytics_dev"
 
 
-# ------------------------------------------------------------------------------
-# STAGING ENVIRONMENT
-# ------------------------------------------------------------------------------
 [env.staging]
 name = "ecci-growth-os-staging"
-routes = [
-  { pattern = "staging.eccigrowthos.com/*", zone_name = "eccigrowthos.com" }
-]
 
 [env.staging.vars]
 APP_NAME = "ECCI Growth OS [STAGING]"
@@ -269,7 +249,7 @@ binding = "CONFIG"
 id = "<YOUR_STAGING_CONFIG_KV_ID>"
 
 [[env.staging.r2_buckets]]
-binding = "ASSET_BUCKET"
+binding = "ASSETS"
 bucket_name = "ecci-assets-staging"
 
 [[env.staging.r2_buckets]]
@@ -289,11 +269,5 @@ binding = "ANALYTICS"
 dataset = "ecci_analytics_staging"
 
 
-# ------------------------------------------------------------------------------
-# PRODUCTION ENVIRONMENT OVERRIDES
-# ------------------------------------------------------------------------------
 [env.production]
 name = "ecci-growth-os-prod"
-routes = [
-  { pattern = "api.eccigrowthos.com/*", zone_name = "eccigrowthos.com" }
-]
